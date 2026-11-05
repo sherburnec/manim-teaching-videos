@@ -1,0 +1,20 @@
+name: Smoke test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker compose build
+      - name: Render smoke test
+        run: docker compose run --rm -T manim smoke_test.py SmokeScene -w -l --video_dir media
+      - name: Check output
+        run: test -s media/SmokeScene.mp4

@@ -1,0 +1,16 @@
+# Render output (recreate with docker compose)
+media/
+*.log
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Local planning notes
+docs/superpowers/

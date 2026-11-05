@@ -1,0 +1,9 @@
+services:
+  manim:
+    build: .
+    init: true
+    volumes:
+      - .:/manim
+    working_dir: /manim
+    # Usage: docker compose run --rm manim <manimgl args>
+    entrypoint: ["sh", "/manim/run.sh"]
