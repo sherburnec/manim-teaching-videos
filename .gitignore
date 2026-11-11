@@ -1,5 +1,6 @@
 # Render output (recreate with docker compose)
 media/
+local/
 *.log
 
 # Python

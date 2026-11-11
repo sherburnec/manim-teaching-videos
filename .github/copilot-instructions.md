@@ -1,0 +1,1 @@
+Follow the instructions in [AGENTS.md](../AGENTS.md) at the repository root. In short: use ManimGL (`from manimlib import *`), never Manim Community; render only inside Docker via `./render.sh`; put new scenes in `local/`, not `scenes/`; do not edit `README.md` when making a video.

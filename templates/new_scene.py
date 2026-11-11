@@ -1,8 +1,11 @@
-"""Starter scene. Copy this file to scenes/<topic>_scene.py and edit the
+"""Starter scene. Copy this file to local/<topic>_scene.py and edit the
 sections marked CHANGE THIS.
 
+IMPORTANT: this is ManimGL 1.7.2 (`from manimlib import *`), NOT Manim
+Community Edition (`from manim import *`). Use Text, never Tex/MathTex.
+
 Preview (fast, 480p):
-    docker compose run --rm manim scenes/<topic>_scene.py MyScene -w -l --video_dir media
+    ./render.sh local/<topic>_scene.py MyScene        (PowerShell: .\\render.ps1 ...)
 """
 from manimlib import *  # ManimGL, not Manim Community ("from manim import *")
 import numpy as np

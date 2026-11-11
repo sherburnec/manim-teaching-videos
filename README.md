@@ -41,12 +41,14 @@ The video is saved as `media/<SceneName>.mp4`. The pattern is always `<file> <Sc
 
 ## Make your own video
 
-1. **Copy the template:** copy `templates/new_scene.py` to `scenes/<topic>_scene.py`, e.g. `scenes/regression_scene.py`.
+1. **Copy the template:** copy `templates/new_scene.py` to `local/<topic>_scene.py`, e.g. `local/regression_scene.py`. The `local/` folder is git-ignored, so your own videos stay out of version control. Create the folder if it doesn't exist.
 2. **Rename the class:** change `class MyScene` to a name like `class RegressionScene`.
 3. **Edit the steps:** replace the sections marked `CHANGE THIS`. Each step calls `self.set_texts("Title", "Caption")` and then animates something.
 4. **Preview and repeat:**
 
-       docker compose run --rm manim scenes/regression_scene.py RegressionScene -w -l --video_dir media
+       ./render.sh local/regression_scene.py RegressionScene        # Windows PowerShell: .\render.ps1 ...
+
+   (This wraps the `docker compose run` command above.)
 
 5. **Render the final version** with the 1080p command above.
 
@@ -60,11 +62,23 @@ Prefer to describe the video and let an AI write the code? See [Using an AI assi
 
 ## Using an AI assistant (optional)
 
-You don't need to write Python to use this toolkit. An AI coding assistant such as [Claude Code](https://claude.com/claude-code) can write the scene, render it in Docker, look at the result and fix problems while you focus on what the video should teach.
+You don't need to write Python to use this toolkit. An AI coding assistant can write the scene, render it in Docker, look at the result and fix problems while you focus on what the video should teach. It works with any assistant: [Claude Code](https://claude.com/claude-code), Gemini CLI, GitHub Copilot, Codex, Cursor, or a plain chat window.
+
+### Which assistant, and how
+
+| Setup | What to do |
+|---|---|
+| **Claude Code** | Open the folder. It reads `CLAUDE.md`, which points to `AGENTS.md`. |
+| **Gemini CLI** | Open the folder. It reads `GEMINI.md`, which points to `AGENTS.md`. |
+| **GitHub Copilot** (VS Code agent mode, coding agent) | Open the folder. It reads `.github/copilot-instructions.md` and `AGENTS.md`. |
+| **Codex, Cursor and other agents** | Most read `AGENTS.md` directly. If yours doesn't, tell it: "Read AGENTS.md first." |
+| **Chat only** (ChatGPT, Gemini web, Copilot Chat) | The assistant can't see your files or run commands. Paste `docs/scene-guide.md` and `templates/new_scene.py` into the chat, describe your video, save the code it gives you as `local/<topic>_scene.py`, and run `./render.sh` yourself. Paste any error back. |
+
+Agents with a terminal can run the whole loop themselves. Others write the code and you run the render command. Assistants that can't view images can't check the contact sheet for overlapping text, so open `media/<SceneClass>_contact.png` (or the preview video) yourself and tell them what's wrong.
 
 ### What the assistant already knows
 
-`CLAUDE.md` is a briefing file that Claude Code reads automatically when you open this folder. It tells the assistant:
+`AGENTS.md` is a briefing file that agents read when you open this folder. It tells the assistant:
 
 - **Which library to use.** ManimGL (`from manimlib import *`), not the more common Manim Community Edition. Most online examples are for Manim Community, and mixing the two up is the most common cause of errors.
 - **How to run things.** All rendering goes through `docker compose run ...`. Nothing gets installed on your computer.
@@ -73,12 +87,12 @@ You don't need to write Python to use this toolkit. An AI coding assistant such 
 - **The workflow.** Work out the data in NumPy first, start from `templates/new_scene.py`, preview at low quality, check frames, then **stop and ask you to approve** before rendering the final 1080p version.
 - **Ground rules.** Only edit files in this folder, ask before deleting anything or running anything outside Docker, and stop to ask if the same error comes back three times.
 
-Other assistants (Cursor, Copilot, ChatGPT and so on) don't read `CLAUDE.md` by themselves, but it's plain text. Paste it in, or point the assistant at it, at the start of a session.
+`CLAUDE.md`, `GEMINI.md` and `.github/copilot-instructions.md` just point to `AGENTS.md`, so there is one file to maintain. It's plain text, so you can also paste it into any assistant that doesn't read it automatically.
 
 ### Getting started
 
 1. Finish the [Setup](#setup-once) steps above and make sure Docker Desktop is running.
-2. Open a terminal in this folder and run `claude` (or open the folder in VS Code with the Claude Code extension).
+2. Open a terminal in this folder and start your assistant (for example `claude` or `gemini`), or open the folder in VS Code with your assistant's extension.
 3. Describe the video you want in plain language.
 
 ### Things you can ask for
@@ -115,11 +129,11 @@ Other assistants (Cursor, Copilot, ChatGPT and so on) don't read `CLAUDE.md` by 
 ### What a session usually looks like
 
 1. You describe the topic, audience, rough length and anything you want to see.
-2. The assistant works out the data and steps, writes `scenes/<topic>_scene.py`, and renders a 480p preview.
+2. The assistant works out the data and steps, writes `local/<topic>_scene.py`, and renders a 480p preview.
 3. It checks that the render worked (file exists, sensible length, no errors) and inspects stills from it.
 4. It gives you the path to the preview, e.g. `media/RegressionScene.mp4`. You watch it and ask for changes.
 5. When you're happy, you approve it and the assistant renders the 1080p 60 fps version and reports the resolution, length and file size.
-6. It adds the new scene to the [example table](#example-videos) in this README.
+6. Your scene stays in `local/` and the README is left alone. To publish a scene as a shared example, ask the assistant to move it to `scenes/` and add it to the [example table](#example-videos).
 
 ### Tips for good results
 
@@ -135,7 +149,7 @@ An AI assistant can write and debug the animation, but you are still the subject
 
 - **Check the content is correct.** Watch the whole video before showing it to a class. Make sure the definitions, numbers and simplifications are right for your course.
 - **Check that it reads well.** Is the text big enough, and are the pauses long enough for your students?
-- **Look at commands before approving them.** The assistant should only run `docker compose ...` commands for rendering. If it suggests installing software on your computer or deleting files outside this folder, say no and ask why.
+- **Look at commands before approving them.** The assistant should only run `docker compose ...` commands (or `render.sh` / `check.sh`) for rendering. If it suggests installing software on your computer or deleting files outside this folder, say no and ask why.
 - **Be careful with student data.** Only share data you are allowed to share, and remove personal information first.
 
 ## Tips
